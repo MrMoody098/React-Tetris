@@ -45,6 +45,11 @@ const Tetris: React.FC = () => {
   });
   const musicRef = useRef<HTMLAudioElement | null>(null);
   const [musicMuted, setMusicMuted] = useState(false);
+  const [musicVolume, setMusicVolume] = useState(0);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
   const startGame = () => {
     setGameState({
@@ -214,17 +219,79 @@ const Tetris: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [gameStarted, movePiece, rotatePiece, dropPiece]);
 
-  // Music control effect
+  // Music control effect + analyser
   useEffect(() => {
     if (!musicRef.current) return;
+
+    // Initialize audio context only once
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+
+    // Create source node only once
+    if (!sourceRef.current) {
+      sourceRef.current = audioCtxRef.current.createMediaElementSource(musicRef.current);
+    }
+
     if (gameStarted && !gameState.gameOver && !gameState.isPaused) {
+      // Resume audio context if it was suspended
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+
       musicRef.current.loop = true;
       musicRef.current.volume = 0.25;
       musicRef.current.muted = musicMuted;
-      musicRef.current.play().catch(() => {});
+      
+      // Play music and handle any errors
+      musicRef.current.play().catch(error => {
+        console.error('Error playing music:', error);
+      });
+
+      // Create new analyser for this session
+      const analyser = audioCtxRef.current.createAnalyser();
+      analyser.fftSize = 256;
+      
+      // Disconnect any existing connections
+      sourceRef.current.disconnect();
+      analyser.disconnect();
+      
+      // Set up new connections
+      sourceRef.current.connect(analyser);
+      analyser.connect(audioCtxRef.current.destination);
+      analyserRef.current = analyser;
+
+      // Animation loop to update volume
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      const animate = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getByteFrequencyData(dataArray);
+        // Use the average volume
+        const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+        setMusicVolume(avg);
+        animationFrameRef.current = requestAnimationFrame(animate);
+      };
+      animate();
     } else {
-      musicRef.current.pause();
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      setMusicVolume(0);
+      
+      // Pause the music when game is not active
+      if (musicRef.current) {
+        musicRef.current.pause();
+      }
     }
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (analyserRef.current) {
+        analyserRef.current.disconnect();
+      }
+    };
   }, [gameStarted, gameState.gameOver, gameState.isPaused, musicMuted]);
 
   if (!gameStarted) {
@@ -281,7 +348,13 @@ const Tetris: React.FC = () => {
           {musicMuted ? 'Unmute Music' : 'Mute Music'}
         </button>
       </div>
-      <GameBoard board={gameState.board} currentPiece={gameState.currentPiece} />
+      <GameBoard
+        board={gameState.board}
+        currentPiece={gameState.currentPiece}
+        style={{
+          boxShadow: `0 0 ${16 + musicVolume / 4}px ${4 + musicVolume / 16}px #0ff, 0 0 ${24 + musicVolume / 2}px #f0f`
+        }}
+      />
     </div>
   );
 };

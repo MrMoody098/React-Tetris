@@ -5,9 +5,10 @@ import { getTetrominoShape } from '../utils/tetrominoes';
 interface GameBoardProps {
   board: Board;
   currentPiece: Tetromino | null;
+  style?: React.CSSProperties;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ board, currentPiece }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ board, currentPiece, style }) => {
   // Create a copy of the board to show the current piece
   const displayBoard = board.map(row => [...row]);
 
@@ -28,7 +29,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, currentPiece }) => {
   }
 
   return (
-    <div className="game-board">
+    <div className="game-board" style={style}>
       {displayBoard.map((row, y) => (
         <div key={y} className="board-row">
           {row.map((cell, x) => (
