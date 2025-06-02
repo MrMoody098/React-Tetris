@@ -33,6 +33,94 @@ const createNewPiece = (): Tetromino => ({
   rotation: 0
 });
 
+const TETRIS_TITLE = [
+  // r (lowercase)
+  [
+    ['i','i','i'],
+    ['i',null,'i'],
+    ['i','i',null],
+    ['i','i',null],
+    ['i',null,'i'],
+  ],
+  // E
+  [
+    ['j','j','j'],
+    ['j',null,null],
+    ['j','j','j'],
+    ['j',null,null],
+    ['j','j','j'],
+  ],
+  // A
+  [
+    [null,'l',null],
+    ['l',null,'l'],
+    ['l','l','l'],
+    ['l',null,'l'],
+    ['l',null,'l'],
+  ],
+  // C
+  [
+    [null,'o','o'],
+    ['o',null,null],
+    ['o',null,null],
+    ['o',null,null],
+    [null,'o','o'],
+  ],
+  // T
+  [
+    ['t','t','t'],
+    [null,'t',null],
+    [null,'t',null],
+    [null,'t',null],
+    [null,'t',null],
+  ],
+  // R
+  [
+    ['s','s','s'],
+    ['s',null,null],
+    ['s','s','s'],
+    ['s',null,'s'],
+    ['s',null,'s'],
+  ],
+  // I
+  [
+    [null,'z',null],
+    [null,'z',null],
+    [null,'z',null],
+    [null,'z',null],
+    [null,'z',null],
+  ],
+  // S
+  [
+    [null,'t','t'],
+    ['t',null,null],
+    [null,'t','t'],
+    [null,null,'t'],
+    ['t','t',null],
+  ],
+];
+
+function TetrisSymbolTitle() {
+  return (
+    <div className="tetris-symbol-title">
+      {TETRIS_TITLE.map((letter, i) => (
+        <div className="tetris-symbol-letter" key={i}>
+          {letter.map((row, y) => (
+            <div className="tetris-symbol-row" key={y}>
+              {row.map((cell, x) => (
+                <div
+                  key={x}
+                  className={cell ? `tetris-mini-block mini-${cell}` : 'tetris-mini-block mini-empty'}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const Tetris: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
@@ -223,40 +311,32 @@ const Tetris: React.FC = () => {
   useEffect(() => {
     if (!musicRef.current) return;
 
-    // Initialize audio context only once
+    // Only create AudioContext and source node once
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
-
-    // Create source node only once
     if (!sourceRef.current) {
       sourceRef.current = audioCtxRef.current.createMediaElementSource(musicRef.current);
     }
 
     if (gameStarted && !gameState.gameOver && !gameState.isPaused) {
-      // Resume audio context if it was suspended
       if (audioCtxRef.current.state === 'suspended') {
         audioCtxRef.current.resume();
       }
-
       musicRef.current.loop = true;
       musicRef.current.volume = 0.25;
       musicRef.current.muted = musicMuted;
-      
-      // Play music and handle any errors
-      musicRef.current.play().catch(error => {
-        console.error('Error playing music:', error);
+      musicRef.current.play().catch(e => {
+        console.error('Music play error:', e);
       });
 
-      // Create new analyser for this session
+      // Disconnect previous analyser if any
+      if (analyserRef.current) {
+        analyserRef.current.disconnect();
+      }
       const analyser = audioCtxRef.current.createAnalyser();
       analyser.fftSize = 256;
-      
-      // Disconnect any existing connections
-      sourceRef.current.disconnect();
-      analyser.disconnect();
-      
-      // Set up new connections
+      // DO NOT disconnect or reconnect the source node!
       sourceRef.current.connect(analyser);
       analyser.connect(audioCtxRef.current.destination);
       analyserRef.current = analyser;
@@ -266,7 +346,7 @@ const Tetris: React.FC = () => {
       const animate = () => {
         if (!analyserRef.current) return;
         analyserRef.current.getByteFrequencyData(dataArray);
-        // Use the average volume
+        console.log('analyser data:', dataArray);
         const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
         setMusicVolume(avg);
         animationFrameRef.current = requestAnimationFrame(animate);
@@ -277,8 +357,6 @@ const Tetris: React.FC = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
       setMusicVolume(0);
-      
-      // Pause the music when game is not active
       if (musicRef.current) {
         musicRef.current.pause();
       }
@@ -321,6 +399,7 @@ const Tetris: React.FC = () => {
 
   return (
     <div className="tetris-game">
+      <TetrisSymbolTitle />
       <audio ref={musicRef} src={MUSIC_URL} preload="auto" />
       <div className="sidebar">
         <div className="game-info">

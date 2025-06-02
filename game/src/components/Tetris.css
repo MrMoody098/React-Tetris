@@ -182,3 +182,100 @@ body {
   transform: scale(1.06) rotate(-2deg);
   box-shadow: 0 0 18px #f0f, 0 0 30px #0ff;
 }
+
+.tetris-title {
+  font-family: 'Press Start 2P', 'Orbitron', 'Segoe UI', 'Arial', sans-serif;
+  font-size: 2.8em;
+  letter-spacing: 0.12em;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  user-select: none;
+  margin-bottom: 36px;
+  margin-right: 32px;
+  margin-left: 8px;
+  margin-top: 8px;
+}
+.tetris-title span {
+  display: inline-block;
+  margin-right: 0.08em;
+  margin-left: 0.01em;
+  padding: 0 0.04em;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  text-shadow:
+    0 2px 0 #222,
+    0 0 8px #fff,
+    0 0 16px currentColor,
+    0 0 32px currentColor,
+    2px 2px 0 #000;
+  border-radius: 3px;
+}
+.tetris-t { color: #00f0f0; text-shadow: 0 0 8px #0ff, 0 0 16px #0ff, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-e { color: #f0a000; text-shadow: 0 0 8px #fa0, 0 0 16px #fa0, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-t2 { color: #f0f000; text-shadow: 0 0 8px #ff0, 0 0 16px #ff0, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-r { color: #00f000; text-shadow: 0 0 8px #0f0, 0 0 16px #0f0, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-i { color: #a000f0; text-shadow: 0 0 8px #f0f, 0 0 16px #f0f, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-s { color: #f00000; text-shadow: 0 0 8px #f00, 0 0 16px #f00, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-z { color: #0000f0; text-shadow: 0 0 8px #00f, 0 0 16px #00f, 2px 2px 0 #000, 0 2px 0 #222; }
+.tetris-o { color: #ff00cc; text-shadow: 0 0 8px #f0f, 0 0 16px #f0f, 2px 2px 0 #000, 0 2px 0 #222; }
+
+@media (max-width: 900px) {
+  .tetris-title {
+    font-size: 2em;
+    margin-bottom: 18px;
+    margin-right: 0;
+    justify-content: center;
+  }
+}
+
+.tetris-symbol-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 36px;
+  margin-right: 32px;
+  margin-left: 8px;
+  margin-top: 8px;
+  user-select: none;
+  gap: 0.7em;
+}
+.tetris-symbol-letter {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.1em;
+}
+.tetris-symbol-row {
+  display: flex;
+  flex-direction: row;
+  height: 0.9em;
+}
+.tetris-mini-block {
+  width: 0.9em;
+  height: 0.9em;
+  margin: 0.05em;
+  border-radius: 3px;
+  box-sizing: border-box;
+  border: 2px solid #222;
+  background: #222;
+  box-shadow: 0 0 6px #000, 0 0 12px #000;
+}
+.mini-i { background: #006060; border-color: #0ff; box-shadow: 0 0 8px #0ff, 0 0 16px #0ff; }
+.mini-j { background: #000060; border-color: #00f; box-shadow: 0 0 8px #00f, 0 0 16px #00f; }
+.mini-l { background: #604000; border-color: #fa0; box-shadow: 0 0 8px #fa0, 0 0 16px #fa0; }
+.mini-o { background: #606000; border-color: #ff0; box-shadow: 0 0 8px #ff0, 0 0 16px #ff0; }
+.mini-s { background: #006000; border-color: #0f0; box-shadow: 0 0 8px #0f0, 0 0 16px #0f0; }
+.mini-t { background: #400060; border-color: #f0f; box-shadow: 0 0 8px #f0f, 0 0 16px #f0f; }
+.mini-z { background: #600000; border-color: #f00; box-shadow: 0 0 8px #f00, 0 0 16px #f00; }
+.mini-empty { background: transparent; border: none; box-shadow: none; }
+
+@media (max-width: 900px) {
+  .tetris-symbol-title {
+    margin-bottom: 18px;
+    margin-right: 0;
+    justify-content: center;
+    font-size: 0.7em;
+  }
+}
