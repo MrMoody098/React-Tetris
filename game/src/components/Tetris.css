@@ -1,0 +1,184 @@
+html, body {
+  min-height: 100vh;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1a0025 0%, #0f2027 100%);
+  color: #fff;
+  font-family: 'Orbitron', 'Segoe UI', 'Arial', sans-serif;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+}
+
+.tetris-game {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 36px;
+  background: rgba(20, 10, 40, 0.98);
+  border-radius: 24px;
+  box-shadow: 0 0 60px 10px #0ff6, 0 0 120px 10px #f0f3;
+  border: 2.5px solid #0ff;
+  margin: 0;
+  max-height: 95vh;
+  max-width: 1100px;
+  z-index: 1;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  margin-right: 28px;
+  min-width: 180px;
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .tetris-game {
+    flex-direction: column;
+    align-items: center;
+    max-height: unset;
+    padding: 18px 6px;
+  }
+  .sidebar {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-right: 0;
+    margin-bottom: 24px;
+    gap: 12px;
+    min-width: unset;
+    justify-content: center;
+  }
+}
+
+.start-screen, .game-over, .paused {
+  background: rgba(30, 0, 60, 0.85);
+  border: 2px solid #f0f;
+  border-radius: 15px;
+  box-shadow: 0 0 16px #f0f, 0 0 24px #0ff;
+  padding: 40px;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+}
+
+.start-screen h1 {
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  color: #0ff;
+  text-shadow: 0 0 20px #0ff, 0 0 40px #f0f;
+  letter-spacing: 2px;
+}
+
+.start-button, .restart-button {
+  padding: 13px 26px;
+  font-size: 1.1em;
+  background: linear-gradient(90deg, #0ff 0%, #f0f 100%);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 18px 0;
+  font-family: 'Orbitron', 'Segoe UI', 'Arial', sans-serif;
+  font-weight: bold;
+  box-shadow: 0 0 8px #0ff, 0 0 16px #f0f;
+  transition: all 0.2s cubic-bezier(.4,2,.6,1);
+  text-shadow: 0 0 5px #fff;
+}
+
+.start-button:hover, .restart-button:hover {
+  background: linear-gradient(90deg, #f0f 0%, #0ff 100%);
+  color: #fff;
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 0 18px #f0f, 0 0 30px #0ff;
+}
+
+.game-info {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #ff0;
+  text-shadow: 0 0 8px #ff0, 0 0 12px #0ff;
+  background: rgba(20, 10, 40, 0.7);
+  border-radius: 10px;
+  padding: 10px 24px;
+  border: 1.5px solid #0ff;
+  box-shadow: 0 0 8px #0ff;
+}
+
+.game-info > div {
+  margin: 5px 0;
+}
+
+.game-over, .paused {
+  color: #ff00cc;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 10px 0;
+  border: 2px solid #ff0;
+  box-shadow: 0 0 12px #ff0, 0 0 20px #f0f;
+}
+
+.controls {
+  margin-top: 0;
+  padding: 14px 18px;
+  background: rgba(30, 0, 60, 0.7);
+  border-radius: 8px;
+  text-align: left;
+  border: 1.5px solid #f0f;
+  box-shadow: 0 0 8px #f0f;
+  color: #0ff;
+  font-family: 'Orbitron', 'Segoe UI', 'Arial', sans-serif;
+}
+
+.controls p {
+  margin: 5px 0;
+  font-size: 1em;
+  text-shadow: 0 0 5px #0ff;
+}
+
+.controls p:first-child {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ff0;
+  text-shadow: 0 0 10px #ff0;
+}
+
+.mute-btn {
+  margin-top: 18px;
+  padding: 10px 22px;
+  font-size: 1em;
+  background: linear-gradient(90deg, #0ff 0%, #f0f 100%);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Orbitron', 'Segoe UI', 'Arial', sans-serif;
+  font-weight: bold;
+  box-shadow: 0 0 8px #0ff, 0 0 16px #f0f;
+  transition: all 0.2s cubic-bezier(.4,2,.6,1);
+  text-shadow: 0 0 5px #fff;
+  display: block;
+}
+.mute-btn:hover {
+  background: linear-gradient(90deg, #f0f 0%, #0ff 100%);
+  color: #fff;
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 0 18px #f0f, 0 0 30px #0ff;
+}
