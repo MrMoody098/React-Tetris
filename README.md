@@ -3,7 +3,7 @@
 A modern, cyberpunk-themed Tetris game built with React and TypeScript.  
 Play classic Tetris with neon visuals, music, sound effects, and responsive controls—all in your browser!
 
-![Reactris Screenshot](./screenshot.png)
+![Reactris Screenshot](./reactris_screenshot.png)
 
 ---
 
