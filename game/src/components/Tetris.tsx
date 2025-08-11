@@ -311,9 +311,18 @@ const Tetris: React.FC = () => {
   useEffect(() => {
     if (!musicRef.current) return;
 
+    // Determine if the Web Audio API is available
+    const AudioContextConstructor =
+      (window as any).AudioContext || (window as any).webkitAudioContext;
+
+    if (!AudioContextConstructor) {
+      console.warn('Web Audio API is not supported in this environment.');
+      return;
+    }
+
     // Only create AudioContext and source node once
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      audioCtxRef.current = new AudioContextConstructor();
     }
     if (!sourceRef.current) {
       sourceRef.current = audioCtxRef.current.createMediaElementSource(musicRef.current);
